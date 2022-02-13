@@ -92,12 +92,12 @@ var checkLoaded = setInterval(function() {
     let tries = 0;
     let loaded = document.getElementsByClassName('activity workout').length;
     if (loaded) {
-       clearInterval(checkExist);
+       clearInterval(checkLoaded);
        main();
     } else {
         tries++;
         if (tries > 200) {
-            clearInterval(checkExist);
+            clearInterval(checkLoaded);
         }
     }
 }, 50);
@@ -235,7 +235,9 @@ function addNetDistanceElements (sportMetrics, thisWeek) {
                 net = Duration.diff(values.completed, values.planned);
             } else {
                 net = values.completed - values.planned;
-                net = net.toFixed(1)
+                if ( metric !== "tss" ) {
+                    net = net.toFixed(1)
+                }
             }
 
             const netDistanceElement = createDifferenceElement(sport, metric, net, thisWeek);

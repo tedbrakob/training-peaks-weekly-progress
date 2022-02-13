@@ -22,3 +22,7 @@ Shows current weekly progress relative to planned values on TrainingPeaks calend
 <br>
 
 ---
+
+<div align="center">
+  <img src="images/screenshot.png" alt="Logo" width="640" height="400">
+</div>
