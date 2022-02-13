@@ -1,0 +1,18 @@
+{
+    "name": "TrainingPeaks Weekly Progress",
+    "version": "1.0.0",
+    "description": "Shows current weekly progress relative to planned values on TrainingPeaks calendar.",
+    "manifest_version": 3,
+    "content_scripts": [
+        {
+            "matches": ["*://app.trainingpeaks.com/*"],
+            "run_at": "document_end",
+            "js": ["content-script.js"]
+        }
+    ],
+    "web_accessible_resources": [{
+        "resources": ["weekly-progress.js"],
+        "matches": ["*://app.trainingpeaks.com/*"]
+    }],
+    "icons": { "128": "images/icon.jpeg" }
+}
