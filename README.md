@@ -3,7 +3,7 @@
 
 <div align="center">
   <a href="https://github.com/tedbrakob/training-peaks-weekly-progress">
-    <img src="images/icon.jpeg" alt="Logo" width="80" height="80">
+    <img src="images/icon.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">TrainingPeaks Weekly Progress</h3>
