@@ -1,6 +1,6 @@
 {
     "name": "TrainingPeaks Weekly Progress",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Shows current weekly progress relative to planned values on TrainingPeaks calendar.",
     "manifest_version": 3,
     "content_scripts": [
