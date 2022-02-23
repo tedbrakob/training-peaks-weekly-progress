@@ -14,5 +14,5 @@
         "resources": ["weekly-progress.js"],
         "matches": ["*://app.trainingpeaks.com/*"]
     }],
-    "icons": { "128": "images/icon.jpeg" }
+    "icons": { "128": "images/icon.png" }
 }

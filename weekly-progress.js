@@ -1,5 +1,56 @@
-class Duration {
+var checkNavLoaded = setInterval(function() {
+    let tries = 0;
+    let loaded = document.getElementsByClassName('appHeaderMainNavigation').length;
 
+    if (loaded) {
+        clearInterval(checkNavLoaded);
+
+        attachNavClickHandler();
+        if ( document.getElementsByClassName('appHeaderMainNavigation calendar').length ) {
+            checkCalendarLoaded();
+        }
+    } else {
+        tries++;
+        if (tries > 200) {
+            clearInterval(checkNavLoaded);
+        }
+    }
+}, 50);
+
+function attachNavClickHandler () {
+    let calendarNavButton = document.getElementsByClassName('appHeaderMainNavigationButtons calendar')[0];
+    calendarNavButton.addEventListener('click', checkCalendarLoaded);
+}
+
+function checkCalendarLoaded () {
+    var calendarLoadedChecker = setInterval(function() {
+        let tries = 0;
+        let loaded = document.querySelectorAll('.cf.daysContainer.thisWeek .dayWidth.dayContainer.day .addWorkoutWrapper').length;
+
+        if (loaded) {
+            clearInterval(calendarLoadedChecker);
+            setTimeout(main, 1); //TODO: Find a less hacky way to wait until workouts are loaded
+        } else {
+            tries++;
+            if (tries > 200) {
+                clearInterval(calendarLoadedChecker);
+            }
+        }
+    }, 50);
+}
+
+function main () {
+    const thisWeek = document.getElementsByClassName('thisWeek')[0];
+    const sportMetrics = initializeMetrics(thisWeek);
+
+    for (const [sport, metrics] of Object.entries(sportMetrics)) {
+        populatePlannedMetrics(sport, metrics, thisWeek);
+    }
+
+    addNetDistanceElements(sportMetrics, thisWeek);
+}
+
+class Duration {
     constructor(hours, minutes, seconds) {
         this.hours = hours;
         this.minutes = minutes;
@@ -22,7 +73,7 @@ class Duration {
         return total;
     }
 
-    static fromString (string) {
+    static createFromString (string) {
         const components = string.split(':');
 
         let hours = components[0] ? Number(components[0]) : 0;
@@ -85,32 +136,6 @@ const metricSelectors = {
         completedWorkoutSelector: ".tssPlanned",
         skippedWorkoutSelector: ".tss",
     }
-
-}
-
-var checkLoaded = setInterval(function() {
-    let tries = 0;
-    let loaded = document.getElementsByClassName('activity workout').length;
-    if (loaded) {
-       clearInterval(checkLoaded);
-       main();
-    } else {
-        tries++;
-        if (tries > 200) {
-            clearInterval(checkLoaded);
-        }
-    }
-}, 50);
-
-function main () {
-    const thisWeek = document.getElementsByClassName('thisWeek')[0];
-    const sportMetrics = initializeMetrics(thisWeek);
-
-    for (const [sport, metrics] of Object.entries(sportMetrics)) {
-        populatePlannedMetrics(sport, metrics, thisWeek);
-    }
-
-    addNetDistanceElements(sportMetrics, thisWeek);
 }
 
 function populatePlannedMetrics (sport, metrics, thisWeek) {
@@ -152,7 +177,7 @@ function getPlannedValueFromSkippedWorkouts (sport, metric, thisWeek) {
         let workoutPlanned = workout.childNodes[0].childNodes[0].data;
 
         if ( metric === "duration" ) {
-            workoutPlanned = Duration.fromString(workoutPlanned);
+            workoutPlanned = Duration.createFromString(workoutPlanned);
             total = Duration.sum(total, workoutPlanned);
         } else {
             workoutPlanned = Number(workoutPlanned);
@@ -184,14 +209,13 @@ function getPlannedValueFromCompletedWorkouts (sport, metric, thisWeek) {
         let workoutPlanned = workout.childNodes[1].data;
 
         if ( metric === "duration" ) {
-            workoutPlanned = Duration.fromString(workoutPlanned);
+            workoutPlanned = Duration.createFromString(workoutPlanned);
             total = Duration.sum(total, workoutPlanned);
         } else {
             workoutPlanned = Number(workoutPlanned);
             total += workoutPlanned;
         }
     }
-
     return total;
 }
 
@@ -208,7 +232,7 @@ function initializeMetrics (thisWeek) {
         completed = completed.replace(/[^\d.-:]/g, '');
 
         if ( metric === 'duration') {
-            completed = Duration.fromString(completed);
+            completed = Duration.createFromString(completed);
         } else {
             completed = Number(completed);
         }
@@ -253,9 +277,14 @@ function addNetDistanceElements (sportMetrics, thisWeek) {
 
 function createDifferenceElement (sport, metric, net, thisWeek) {
     const selector = metricSelectors[metric].summarySelector;
+    let newElementId = `training-peaks-weekly-progress-difference-${sport}-${metric}`;
 
-    let metricCompleted = thisWeek.querySelectorAll(`.${sport}${selector} .weekSummaryValueCompleted.total`)[0];
-    let newElement = metricCompleted.cloneNode(true);
+    let newElement = document.getElementById(newElementId);
+    if ( !newElement ) {
+        let metricCompleted = thisWeek.querySelectorAll(`.${sport}${selector} .weekSummaryValueCompleted.total`)[0];
+        newElement = metricCompleted.cloneNode(true);
+        newElement.id = newElementId;
+    }
 
     if ( metric === 'duration' ) {
         netSeconds = net.getTotalSeconds();
