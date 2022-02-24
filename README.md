@@ -9,7 +9,7 @@
   <h3 align="center">TrainingPeaks Weekly Progress</h3>
 
   <p align="center">
-    <a href="https://chrome.google.com/webstore/detail/training-peaks-weekly-progress">Chrome Web Store</a>
+    <a href="https://chrome.google.com/webstore/detail/trainingpeaks-weekly-prog/aoiedkonejnpfmbbeofgdkfafegdllaa">Chrome Web Store</a>
     ·
     <a href="https://github.com/tedbrakob/training-peaks-weekly-progress">Github</a>
   </p>
